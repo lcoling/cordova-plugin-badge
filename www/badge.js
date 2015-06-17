@@ -48,7 +48,8 @@ exports.set = function (badge) {
         this._config.title,
         this._config.smallIcon,
         this._config.autoClear,
-        this._config.largeIcon
+        this._config.largeIcon,
+        this._config.text
     ];
 
     this.registerPermission(function (granted) {
@@ -189,8 +190,10 @@ exports._config = {
     autoClear: false,
     // Ob und welches Icon für Android verwendet werden soll
     smallIcon: 'ic_dialog_email',
-    // large icon for android notification
-    largeIcon: ''
+    // large icon for Android notification
+    largeIcon: '',
+    // set the notification text on Android
+    text: ''
 };
 
 

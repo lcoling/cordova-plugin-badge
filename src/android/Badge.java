@@ -93,9 +93,10 @@ public class Badge extends CordovaPlugin {
             String smallIcon  = args.optString(2);
             boolean autoClear = args.optBoolean(3, false);
             String largeIcon  = args.optString(4);
+            String text       = args.optString(5);
 
             clearBadge();
-            setBadge(number, title, largeIcon, smallIcon, autoClear);
+            setBadge(number, title, text, largeIcon, smallIcon, autoClear);
 
             return true;
         }
@@ -133,7 +134,7 @@ public class Badge extends CordovaPlugin {
      */
     @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
-    private void setBadge (final int badge, final String title, final String largeIcon,
+    private void setBadge (final int badge, final String title, final String text, final String largeIcon,
                            final String smallIcon, final boolean autoCancel) {
 
         cordova.getThreadPool().execute(new Runnable() {
@@ -152,6 +153,7 @@ public class Badge extends CordovaPlugin {
 
                 Builder notification = new Notification.Builder(context)
                         .setContentTitle(title_)
+                        .setContentText(text)
                         .setNumber(badge)
                         .setTicker(title_)
                         .setAutoCancel(autoCancel)
