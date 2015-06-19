@@ -30,8 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.Notification.Builder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -151,7 +151,7 @@ public class Badge extends CordovaPlugin {
 
                 String title_ = String.format(title, badge);
 
-                Builder notification = new Notification.Builder(context)
+                Builder notification = new NotificationCompat.Builder(context)
                         .setContentTitle(title_)
                         .setContentText(text)
                         .setNumber(badge)
@@ -159,17 +159,11 @@ public class Badge extends CordovaPlugin {
                         .setAutoCancel(autoCancel)
                         .setSmallIcon(getResIdForSmallIcon(smallIcon))
                         .setLargeIcon(getIconBitmap(context, largeIcon))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
                         .setContentIntent(contentIntent);
 
                 saveBadge(badge);
-
-                if (Build.VERSION.SDK_INT<16) {
-                    // Build notification for HoneyComb to ICS
-                    getNotificationManager().notify(ID, notification.getNotification());
-                } else if (Build.VERSION.SDK_INT>15) {
-                    // Notification for Jellybean and above
-                    getNotificationManager().notify(ID, notification.build());
-                }
+                getNotificationManager().notify(ID, notification.build());
             }
         });
     }
