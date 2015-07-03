@@ -96,8 +96,12 @@
         CDVPluginResult* result;
         BOOL hasPermission;
 
-        hasPermission = [self.app hasPermissionToDisplayBadges];
+        //hasPermission = [self.app hasPermissionToDisplayBadges];
 
+        // another plugin is assuming resposibility of registering this so
+        // always say yes
+        hasPermission = YES;
+        
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                      messageAsBool:hasPermission];
 
@@ -114,6 +118,10 @@
  */
 - (void) registerPermission:(CDVInvokedUrlCommand *)command
 {
+    // another plugin is responsible for this so always refer to hasPermission:
+    [self hasPermission:command];
+    
+    /*
     if (![[UIApplication sharedApplication]
          respondsToSelector:@selector(registerUserNotificationSettings:)])
     {
@@ -125,6 +133,7 @@
     [self.commandDelegate runInBackground:^{
         [self.app registerPermissionToDisplayBadges];
     }];
+    */
 }
 
 #pragma mark -
