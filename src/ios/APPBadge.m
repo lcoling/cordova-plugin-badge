@@ -56,11 +56,12 @@
  */
 - (void) setBadge:(CDVInvokedUrlCommand *)command
 {
-    NSArray* args = [command arguments];
-    int number    = [[args objectAtIndex:0] intValue];
-
     [self.commandDelegate runInBackground:^{
+        NSArray* args = [command arguments];
+        int number    = [[args objectAtIndex:0] intValue];
         [self.app setApplicationIconBadgeNumber:number];
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
     }];
 }
 

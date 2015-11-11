@@ -39,24 +39,20 @@ exports.clear = function () {
 /**
  * Sets the badge of the app icon.
  *
- * @param {Number} badge
- *      The new badge number
+ * @param {Hash} object
+ *      The new badge number and config settings
  */
-exports.set = function (badge) {
+exports.set = function (params, success) {
     var args = [
-        parseInt(badge) || 0,
-        this._config.title,
-        this._config.smallIcon,
-        this._config.autoClear,
-        this._config.largeIcon,
-        this._config.text
+        parseInt(params.badge) || 0,
+        params.title,
+        params.smallIcon,
+        params.autoClear,
+        params.largeIcon,
+        params.text
     ];
 
-    this.registerPermission(function (granted) {
-        if (granted) {
-            this.exec('setBadge', args);
-        }
-    }, this);
+	exec(success, null, 'Badge', 'setBadge', args);
 };
 
 /**
