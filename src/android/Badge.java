@@ -96,7 +96,8 @@ public class Badge extends CordovaPlugin {
             String text       = args.optString(5);
 
             clearBadge();
-            setBadge(number, title, text, largeIcon, smallIcon, autoClear);
+
+            setBadge(number, title, text, largeIcon, smallIcon, autoClear, callback);
 
             return true;
         }
@@ -127,43 +128,50 @@ public class Badge extends CordovaPlugin {
      *      The new badge number
      * @param title
      *      The notifications title
-     * @param icon
+     * @param largeIcon
+     *      The notifications large icon
+     * @param smallIcon
      *      The notifications small icon
      * @param autoCancel
      *      The autoCancel value
+     * @param callbackContext
+      *     The current callbackContext
      */
     @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     private void setBadge (final int badge, final String title, final String text, final String largeIcon,
-                           final String smallIcon, final boolean autoCancel) {
+                           final String smallIcon, final boolean autoCancel, final CallbackContext callbackContext) {
 
         cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                Context context = cordova.getActivity().getApplicationContext();
-                Intent intent = new Intent(context, LaunchActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                if (badge > 0) {
+                    Context context = cordova.getActivity().getApplicationContext();
+                    Intent intent = new Intent(context, LaunchActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-                intent.putExtra(EXTRA_AUTO_CANCEL, autoCancel);
+                    intent.putExtra(EXTRA_AUTO_CANCEL, autoCancel);
 
-                PendingIntent contentIntent = PendingIntent.getActivity(
-                        context, ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent contentIntent = PendingIntent.getActivity(
+                            context, ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-                String title_ = String.format(title, badge);
+                    String title_ = String.format(title, badge);
 
-                Builder notification = new NotificationCompat.Builder(context)
-                        .setContentTitle(title_)
-                        .setContentText(text)
-                        .setNumber(badge)
-                        .setTicker(title_)
-                        .setAutoCancel(autoCancel)
-                        .setSmallIcon(getResIdForSmallIcon(smallIcon))
-                        .setLargeIcon(getIconBitmap(context, largeIcon))
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
-                        .setContentIntent(contentIntent);
+                    Builder notification = new NotificationCompat.Builder(context)
+                            .setContentTitle(title_)
+                            .setContentText(text)
+                            .setNumber(badge)
+                            .setTicker(title_)
+                            .setAutoCancel(autoCancel)
+                            .setSmallIcon(getResIdForSmallIcon(smallIcon))
+                            .setLargeIcon(getIconBitmap(context, largeIcon))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+                            .setContentIntent(contentIntent);
 
-                saveBadge(badge);
-                getNotificationManager().notify(ID, notification.build());
+                    saveBadge(badge);
+                    getNotificationManager().notify(ID, notification.build());
+                }
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
             }
         });
     }
