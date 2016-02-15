@@ -145,7 +145,8 @@ public class Badge extends CordovaPlugin {
         cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                if (badge > 0) {
+                //Do not notify on Android for now...
+                /*if (badge > 0) {
                     Context context = cordova.getActivity().getApplicationContext();
                     Intent intent = new Intent(context, LaunchActivity.class)
                             .setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -170,7 +171,7 @@ public class Badge extends CordovaPlugin {
 
                     saveBadge(badge);
                     getNotificationManager().notify(ID, notification.build());
-                }
+                }*/
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
             }
         });
